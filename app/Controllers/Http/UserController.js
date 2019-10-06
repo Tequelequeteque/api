@@ -32,7 +32,6 @@ class UserController {
   async store ({ request }) {
     const data = request.only(['name', 'email', 'password'])
     const user = await User.create(data)
-    delete user.password
     return user
   }
 

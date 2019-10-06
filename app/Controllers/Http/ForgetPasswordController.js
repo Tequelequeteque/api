@@ -35,8 +35,8 @@ class ForgetPasswordController {
     const email = request.input('email')
     const user = await User.findByOrFail('email', email)
 
-    user.forget_password_token = crypto.randomBytes(10).toString('hex')
-    user.forget_password_token_created_at = new Date()
+    user.token = crypto.randomBytes(10).toString('hex')
+    user.token_created_at = new Date()
 
     await user.save()
 
@@ -44,7 +44,7 @@ class ForgetPasswordController {
       ['emails.forget_password.edge'],
       {
         email,
-        forget_password_token: user.forget_password_token,
+        token: user.token,
         link: `${request.input('redirect_url')}?forget_password_token=${
           user.forget_password_token
         }`
