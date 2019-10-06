@@ -11,8 +11,6 @@ class User extends Model {
      * it to the database.
      */
     this.addHook('beforeSave', 'UserHook.hashPassword')
-
-    this.addHook('afterSave', 'UserHook.confirmedEmail')
   }
 
   static get hidden () {

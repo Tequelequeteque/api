@@ -12,11 +12,21 @@ Route.group(() => {
 }).prefix('api/users')
 
 Route.group(() => {
+  Route.post('', 'ConfirmedEmailController.store').validator(
+    'ConfirmedEmail/StoreConfirmedEmail'
+  )
+}).prefix('api/emails')
+
+Route.group(() => {
   Route.post('', 'SessionController.store').validator('Session/StoreSession')
 }).prefix('api/sessions')
 
 Route.group(() => {
   Route.post('', 'ForgetPasswordController.store').validator(
     'ForgetPassword/StoreForgetPassword'
+  )
+
+  Route.put('', 'ForgetPasswordController.update').validator(
+    'ForgetPassword/UpdateForgetPassword'
   )
 }).prefix('api/passwords')

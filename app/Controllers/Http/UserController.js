@@ -1,11 +1,14 @@
 'use strict'
 
+const crypto = require('crypto')
+
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/Params')} Params */
 
 const User = use('App/Models/User')
-
+const Kue = use('Kue')
+const sendConfirmedEmail = use('App/Jobs/TaskEmailConfirmed')
 /**
  * Resourceful controller for interacting with users
  */
@@ -30,8 +33,19 @@ class UserController {
    * @param {Request} ctx.request
    */
   async store ({ request }) {
+    const redirect = request.input('redirect')
     const data = request.only(['name', 'email', 'password'])
-    const user = await User.create(data)
+
+    data.token = crypto.randomBytes(10).toString('hex')
+    data.token_created_at = new Date()
+
+    let user = await User.create(data)
+    user = user.toJSON()
+
+    Kue.dispatch(sendConfirmedEmail.key, { ...user, redirect }, { attempts: 3 })
+
+    delete user.token
+    delete user.token_created_at
     return user
   }
 

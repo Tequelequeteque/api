@@ -15,7 +15,7 @@ class UserSchema extends Schema {
       table.string('password', 60).notNullable()
       table.string('token')
       table.timestamp('token_created_at')
-      table.boolean('email_confirmed')
+      table.boolean('email_confirmed').defaultTo(false)
       table.timestamps()
     })
   }

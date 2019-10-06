@@ -5,7 +5,8 @@ class UserStoreUser {
     return {
       name: 'required',
       email: 'required|email|unique:users',
-      password: 'required|confirmed|alphaNumeric|min:6'
+      password: 'required|confirmed|alphaNumeric|min:6',
+      redirect: 'required|url'
     }
   }
 }

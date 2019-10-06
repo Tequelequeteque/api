@@ -10,8 +10,3 @@ UserHook.hashPassword = async userInstance => {
     userInstance.password = await Hash.make(userInstance.password)
   }
 }
-
-UserHook.confirmedEmail = async userInstance => {
-  if (userInstance.dirty.email === userInstance.email) return
-  console.log(userInstance)
-}
