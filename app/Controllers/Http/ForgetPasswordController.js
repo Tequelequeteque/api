@@ -7,8 +7,9 @@ const crypto = require('crypto')
 /** @typedef {import('@adonisjs/framework/src/Params')} Params */
 
 const User = use('App/Models/User')
-const Kue = use('Kue')
-const sendForgetPassword = use('App/Jobs/TaskForgetPasswordEmail')
+const Mail = use('Mail')
+const Env = use('Env')
+const appName = Env.get('APP_NAME')
 
 class ForgetPasswordController {
   /**
@@ -41,8 +42,7 @@ class ForgetPasswordController {
 
     await user.save()
     user = user.toJSON()
-
-    Kue.dispatch(sendForgetPassword.key, { ...user, redirect }, { attempts: 3 })
+    this.sendMail({ ...user, redirect })
   }
 
   /**
@@ -67,14 +67,21 @@ class ForgetPasswordController {
    */
   async update ({ params, request, response }) {
     const { token, password } = request.all()
-    const user = await User.findByOrFail('token', token)
+    let user = await User.findByOrFail('token', token)
 
     user.password = password
     user.token = null
     user.token_created_at = null
-    await user.save()
 
-    return user.toJSON()
+    await user.save()
+    user = user.toJSON()
+
+    delete user.token
+    delete user.token_created_at
+    delete user.password
+    delete user.email_confirmed
+
+    return user
   }
 
   /**
@@ -87,6 +94,23 @@ class ForgetPasswordController {
    */
   async destroy ({ params, request, response }) {
     return response.status(501).send()
+  }
+
+  sendMail ({ name, email, token, redirect }) {
+    Mail.send(
+      ['emails.forget_password.edge'],
+      {
+        name,
+        email,
+        token,
+        link: `${redirect}?token=${token}`
+      },
+      message =>
+        message
+          .to(email)
+          .from(`noreply@${appName}.com`, `Equipe ${appName}`)
+          .subject('Recuperação de senha.')
+    )
   }
 }
 

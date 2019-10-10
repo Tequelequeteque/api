@@ -6,9 +6,11 @@ const crypto = require('crypto')
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/Params')} Params */
 
+const Hash = use('Hash')
+const Mail = use('Mail')
+const Env = use('Env')
+const appName = Env.get('APP_NAME')
 const User = use('App/Models/User')
-const Kue = use('Kue')
-const sendConfirmedEmail = use('App/Jobs/TaskEmailConfirmed')
 /**
  * Resourceful controller for interacting with users
  */
@@ -42,10 +44,13 @@ class UserController {
     let user = await User.create(data)
     user = user.toJSON()
 
-    Kue.dispatch(sendConfirmedEmail.key, { ...user, redirect }, { attempts: 3 })
+    this.sendMail({ ...user, redirect })
 
     delete user.token
     delete user.token_created_at
+    delete user.password
+    delete user.email_confirmed
+
     return user
   }
 
@@ -69,8 +74,43 @@ class UserController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
-    return response.status(501).send()
+  async update ({ request, response, auth }) {
+    let user = auth.user
+    const { name, email, password, newPassword, redirect } = request.all()
+
+    const confirmedPassword = await Hash.verify(password, user.password)
+    console.log(confirmedPassword)
+    if (!confirmedPassword) {
+      return response
+        .status(401)
+        .send({ error: { message: 'Password doesnt match!' } })
+    }
+
+    const anotherUser = await User.findBy('email', email)
+    if (user.id !== anotherUser.id) {
+      return response
+        .status(400)
+        .send({ error: { message: 'Email used by another user!' } })
+    }
+
+    user.name = name || user.name
+    user.email = email || user.email
+    user.password = newPassword || password
+    user.token = crypto.randomBytes(10).toString('hex')
+    user.token_created_at = new Date()
+    user.email_confirmed = false
+
+    user.save()
+    user = user.toJSON()
+
+    this.sendMail({ ...user, redirect })
+
+    delete user.token
+    delete user.token_created_at
+    delete user.password
+    delete user.email_confirmed
+
+    return user
   }
 
   /**
@@ -83,6 +123,24 @@ class UserController {
    */
   async destroy ({ params, request, response }) {
     return response.status(501).send()
+  }
+
+  sendMail ({ name, email, token, redirect }) {
+    Mail.send(
+      ['emails.confirmed_email.edge'],
+      {
+        name,
+        email,
+        token,
+        appName,
+        link: `${redirect}?token=${token}`
+      },
+      message =>
+        message
+          .to(email)
+          .from(`noreply@${appName}.com`, `Equipe ${appName}`)
+          .subject('Confirmação de email.')
+    )
   }
 }
 

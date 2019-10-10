@@ -12,10 +12,6 @@ class User extends Model {
      */
     this.addHook('beforeSave', 'UserHook.hashPassword')
   }
-
-  static get hidden () {
-    return ['password']
-  }
 }
 
 module.exports = User

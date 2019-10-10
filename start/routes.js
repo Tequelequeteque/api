@@ -9,11 +9,14 @@ Route.get('api', ok)
 
 Route.group(() => {
   Route.post('', 'UserController.store').validator('User/StoreUser')
+  Route.put('', 'UserController.update')
+    .middleware(['auth'])
+    .validator('User/UpdateUser')
 }).prefix('api/users')
 
 Route.group(() => {
-  Route.post('', 'ConfirmedEmailController.store').validator(
-    'ConfirmedEmail/StoreConfirmedEmail'
+  Route.put('', 'ConfirmedEmailController.update').validator(
+    'ConfirmedEmail/UpdateConfirmedEmail'
   )
 }).prefix('api/emails')
 
