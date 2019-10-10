@@ -1,2 +1,2 @@
-web: node ./server.js
-
+npx adonis migration:run
+web: npx adonis serve
