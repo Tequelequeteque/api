@@ -65,23 +65,15 @@ class ForgetPasswordController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update ({ request, response }) {
     const { token, password } = request.all()
-    let user = await User.findByOrFail('token', token)
+    const user = await User.findByOrFail('token', token)
 
     user.password = password
     user.token = null
     user.token_created_at = null
 
     await user.save()
-    user = user.toJSON()
-
-    delete user.token
-    delete user.token_created_at
-    delete user.password
-    delete user.email_confirmed
-
-    return user
   }
 
   /**

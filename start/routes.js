@@ -15,6 +15,10 @@ Route.group(() => {
 }).prefix('api/users')
 
 Route.group(() => {
+  Route.post('', 'ConfirmedEmailController.store')
+    .validator('ConfirmedEmail/StoreConfirmedEmail')
+    .middleware(['auth'])
+
   Route.put('', 'ConfirmedEmailController.update').validator(
     'ConfirmedEmail/UpdateConfirmedEmail'
   )

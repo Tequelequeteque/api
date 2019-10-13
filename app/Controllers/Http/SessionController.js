@@ -26,11 +26,12 @@ class SessionController {
    *
    * @param {object} ctx
    * @param {Request} ctx.request
+   * @param {Response} ctx.response
    */
-  async store ({ request, auth }) {
+  async store ({ request, response, auth }) {
     const { email, password } = request.all()
     const token = await auth.attempt(email, password)
-    return token
+    return response.status(201).send(token)
   }
 
   /**

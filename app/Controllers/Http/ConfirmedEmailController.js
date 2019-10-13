@@ -6,15 +6,15 @@ const crypto = require('crypto')
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/Params')} Params */
 
-const Hash = use('Hash')
+const User = use('App/Models/User')
 const Mail = use('Mail')
 const Env = use('Env')
 const appName = Env.get('APP_NAME')
-const User = use('App/Models/User')
+
 /**
- * Resourceful controller for interacting with users
+ * Resourceful controller for interacting with confirmedemails
  */
-class UserController {
+class ConfirmedEmailController {
   /**
    * Show a list of all users.
    * GET users
@@ -33,24 +33,17 @@ class UserController {
    *
    * @param {object} ctx
    * @param {Request} ctx.request
+   * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
+  async store ({ request, response, auth }) {
+    const user = auth.user
     const redirect = request.input('redirect')
-    const data = request.only(['name', 'email', 'password'])
 
-    data.token = crypto.randomBytes(10).toString('hex')
-    data.token_created_at = new Date()
+    user.token = crypto.randomBytes(10).toString('hex')
+    user.token_created_at = new Date()
+    user.email_confirmed = false
 
-    let user = await User.create(data)
-    user = user.toJSON()
-
-    this.sendMail({ ...user, redirect })
-
-    delete user.token
-    delete user.token_created_at
-    delete user.password
-
-    return response.status(201).send(user)
+    this.sendMail({ ...user.toJSON(), redirect })
   }
 
   /**
@@ -73,34 +66,13 @@ class UserController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ request, response, auth }) {
-    const user = auth.user
-    const { name, email, password, newPassword, redirect } = request.all()
+  async update ({ request, response }) {
+    const token = request.input('token')
+    const user = await User.findByOrFail('token', token)
 
-    const confirmedPassword = await Hash.verify(password, user.password)
-    if (!confirmedPassword) {
-      return response
-        .status(401)
-        .send({ error: { message: 'Password doesnt match!' } })
-    }
-
-    const anotherUser = await User.findBy('email', email)
-    if (anotherUser && user.id !== anotherUser.id) {
-      return response
-        .status(400)
-        .send({ error: { message: 'Email used by another user!' } })
-    }
-
-    user.name = name || user.name
-    user.email = email || user.email
-    user.password = newPassword || password
-
-    if (email) {
-      user.token = crypto.randomBytes(10).toString('hex')
-      user.token_created_at = new Date()
-      user.email_confirmed = false
-      this.sendMail({ ...user, redirect })
-    }
+    user.token = null
+    user.token_created_at = null
+    user.email_confirmed = true
 
     await user.save()
   }
@@ -136,4 +108,4 @@ class UserController {
   }
 }
 
-module.exports = UserController
+module.exports = ConfirmedEmailController
