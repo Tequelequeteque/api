@@ -56,4 +56,12 @@ const aliases = {}
 */
 const commands = []
 
+/*
+|--------------------------------------------------------------------------
+| Jobs
+|--------------------------------------------------------------------------
+|
+| Here you store your queue jobs
+|
+*/
 module.exports = { providers, aceProviders, aliases, commands }

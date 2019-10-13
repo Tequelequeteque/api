@@ -8,7 +8,8 @@ const crypto = require('crypto')
 
 const User = use('App/Models/User')
 const Mail = use('Mail')
-const appName = use('Env').get('APP_NAME', 'AdonisJs')
+const Env = use('Env')
+const appName = Env.get('APP_NAME')
 
 class ForgetPasswordController {
   /**
@@ -32,29 +33,16 @@ class ForgetPasswordController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    const redirect = request.input('redirect')
     const email = request.input('email')
-    const user = await User.findByOrFail('email', email)
+    let user = await User.findByOrFail('email', email)
 
     user.token = crypto.randomBytes(10).toString('hex')
     user.token_created_at = new Date()
 
     await user.save()
-
-    await Mail.send(
-      ['emails.forget_password.edge'],
-      {
-        email,
-        token: user.token,
-        link: `${request.input('redirect_url')}?forget_password_token=${
-          user.forget_password_token
-        }`
-      },
-      message =>
-        message
-          .to(user.email)
-          .from(`noreply@${appName}.com`, `Equipe ${appName}`)
-          .subject('Recuperação de senha.')
-    )
+    user = user.toJSON()
+    this.sendMail({ ...user, redirect })
   }
 
   /**
@@ -77,7 +65,16 @@ class ForgetPasswordController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {}
+  async update ({ request, response }) {
+    const { token, password } = request.all()
+    const user = await User.findByOrFail('token', token)
+
+    user.password = password
+    user.token = null
+    user.token_created_at = null
+
+    await user.save()
+  }
 
   /**
    * Delete a session with id.
@@ -89,6 +86,23 @@ class ForgetPasswordController {
    */
   async destroy ({ params, request, response }) {
     return response.status(501).send()
+  }
+
+  sendMail ({ name, email, token, redirect }) {
+    Mail.send(
+      ['emails.forget_password.edge'],
+      {
+        name,
+        email,
+        token,
+        link: `${redirect}?token=${token}`
+      },
+      message =>
+        message
+          .to(email)
+          .from(`noreply@${appName}.com`, `Equipe ${appName}`)
+          .subject('Recuperação de senha.')
+    )
   }
 }
 
