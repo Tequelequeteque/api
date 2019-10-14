@@ -1,3 +1,3 @@
-npm i
-npx adonis migration:run
-web: npx adonis serve
+yarn
+yarn adonis migration:run
+web: yarn adonis serve

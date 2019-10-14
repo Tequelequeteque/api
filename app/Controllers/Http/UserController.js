@@ -74,7 +74,7 @@ class UserController {
    * @param {Response} ctx.response
    */
   async update ({ request, response, auth }) {
-    const user = auth.user
+    let user = auth.user
     const { name, email, password, newPassword, redirect } = request.all()
 
     const confirmedPassword = await Hash.verify(password, user.password)
@@ -103,6 +103,13 @@ class UserController {
     }
 
     await user.save()
+    user = user.toJSON()
+
+    delete user.password
+    delete user.token
+    delete user.token_created_at
+
+    return user
   }
 
   /**
