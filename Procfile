@@ -1,3 +1,3 @@
 yarn
-yarn adonis migration:run
-web: yarn adonis serve
+node ace migration:run
+web: yarn start
