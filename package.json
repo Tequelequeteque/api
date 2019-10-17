@@ -1,5 +1,5 @@
 {
-  "name": "adonis-api-app",
+  "name": "volken",
   "version": "4.1.0",
   "adonis-version": "4.1.0",
   "description": "Adonisjs boilerplate for API server with pre-configured JWT",
@@ -28,7 +28,8 @@
     "@adonisjs/mail": "^3.0.10",
     "@adonisjs/validator": "^5.0.6",
     "@sentry/node": "5.6.2",
-    "sqlite3": "^4.1.0"
+    "pg": "^7.12.1",
+    "url-parse": "^1.4.7"
   },
   "devDependencies": {
     "eslint": "^6.5.1",
@@ -36,7 +37,8 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-standard": "^4.0.1",
+    "sqlite3": "^4.1.0"
   },
   "autoload": {
     "App": "./app"
