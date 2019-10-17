@@ -1,2 +1,2 @@
-release: ENV_SILENT=true node ace migration:run -f
+release: ENV_SILENT=true yarn migrate
 web: ENV_SILENT=true yarn start
