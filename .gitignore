@@ -5,4 +5,4 @@ node_modules
 tmp
 
 # The development sqlite file
-database/development.sqlite
+database/*.sqlite

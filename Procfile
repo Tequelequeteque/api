@@ -1,3 +1,2 @@
-npm i
-npx adonis migration:run
-web: npx adonis serve
+release: ENV_SILENT=true yarn migrate
+web: ENV_SILENT=true yarn start
