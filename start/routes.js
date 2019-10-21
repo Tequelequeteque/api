@@ -7,13 +7,16 @@ const ok = () => ({ ok: true })
 Route.get('', ok)
 Route.get('api', ok)
 
+// users
 Route.group(() => {
   Route.post('', 'UserController.store').validator('User/StoreUser')
+
   Route.put('', 'UserController.update')
     .middleware(['auth'])
     .validator('User/UpdateUser')
 }).prefix('api/users')
 
+// emails
 Route.group(() => {
   Route.post('', 'ConfirmedEmailController.store')
     .validator('ConfirmedEmail/StoreConfirmedEmail')
@@ -24,10 +27,12 @@ Route.group(() => {
   )
 }).prefix('api/emails')
 
+// sessions
 Route.group(() => {
   Route.post('', 'SessionController.store').validator('Session/StoreSession')
 }).prefix('api/sessions')
 
+// password
 Route.group(() => {
   Route.post('', 'ForgetPasswordController.store').validator(
     'ForgetPassword/StoreForgetPassword'
@@ -37,3 +42,16 @@ Route.group(() => {
     'ForgetPassword/UpdateForgetPassword'
   )
 }).prefix('api/passwords')
+
+// flights
+Route.group(() => {
+  Route.resource('flights', 'FlightController')
+    .apiOnly()
+    .middleware(['auth'])
+    .validator(
+      new Map([
+        [['flights.store'], ['Flight/StoreFlight']],
+        [['flights.update'], ['Flight/UpdateFlight']]
+      ])
+    )
+}).prefix('api/users')

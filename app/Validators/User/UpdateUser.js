@@ -1,6 +1,6 @@
 'use strict'
 
-class UserUpdateUser {
+class UserUpdate {
   get rules () {
     return {
       email: 'email',
@@ -13,4 +13,4 @@ class UserUpdateUser {
   }
 }
 
-module.exports = UserUpdateUser
+module.exports = UserUpdate

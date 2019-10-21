@@ -12,6 +12,10 @@ class User extends Model {
      */
     this.addHook('beforeSave', 'UserHook.hashPassword')
   }
+
+  flights () {
+    return this.hasMany('App/Models/Flight', 'id', 'userId')
+  }
 }
 
 module.exports = User

@@ -1,6 +1,6 @@
 'use strict'
 
-class UserStoreUser {
+class UserStore {
   get rules () {
     return {
       name: 'required',
@@ -12,4 +12,4 @@ class UserStoreUser {
   }
 }
 
-module.exports = UserStoreUser
+module.exports = UserStore
