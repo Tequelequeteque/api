@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
@@ -8,50 +8,47 @@ Route.get('', ok)
 Route.get('api', ok)
 
 // users
-Route.group(() => {
-  Route.post('', 'UserController.store').validator('User/StoreUser')
-
-  Route.put('', 'UserController.update')
-    .middleware(['auth'])
-    .validator('User/UpdateUser')
-}).prefix('api/users')
+Route.post('api/users', 'UserController.store').validator('User/StoreUser')
+Route.put('api/users', 'UserController.update')
+  .middleware(['auth'])
+  .validator('User/UpdateUser')
 
 // emails
-Route.group(() => {
-  Route.post('', 'ConfirmedEmailController.store')
-    .validator('ConfirmedEmail/StoreConfirmedEmail')
-    .middleware(['auth'])
-
-  Route.put('', 'ConfirmedEmailController.update').validator(
-    'ConfirmedEmail/UpdateConfirmedEmail'
-  )
-}).prefix('api/emails')
+Route.post('api/emails', 'ConfirmedEmailController.store')
+  .validator('ConfirmedEmail/StoreConfirmedEmail')
+  .middleware(['auth'])
+Route.put('api/emails', 'ConfirmedEmailController.update').validator(
+  'ConfirmedEmail/UpdateConfirmedEmail'
+)
 
 // sessions
-Route.group(() => {
-  Route.post('', 'SessionController.store').validator('Session/StoreSession')
-}).prefix('api/sessions')
+Route.post('api/sessions', 'SessionController.store').validator(
+  'Session/StoreSession'
+)
 
 // password
-Route.group(() => {
-  Route.post('', 'ForgetPasswordController.store').validator(
-    'ForgetPassword/StoreForgetPassword'
-  )
-
-  Route.put('', 'ForgetPasswordController.update').validator(
-    'ForgetPassword/UpdateForgetPassword'
-  )
-}).prefix('api/passwords')
-
+Route.post('api/passwords', 'ForgetPasswordController.store').validator(
+  'ForgetPassword/StoreForgetPassword'
+)
+Route.put('api/passwords', 'ForgetPasswordController.update').validator(
+  'ForgetPassword/UpdateForgetPassword'
+)
 // flights
-Route.group(() => {
-  Route.resource('flights', 'FlightController')
-    .apiOnly()
-    .middleware(['auth'])
-    .validator(
-      new Map([
-        [['flights.store'], ['Flight/StoreFlight']],
-        [['flights.update'], ['Flight/UpdateFlight']]
-      ])
-    )
-}).prefix('api/users')
+// Route.resource('api/users/flights', 'FlightController')
+//   .apiOnly()
+//   .middleware(['auth'])
+//   .validator(
+//     new Map([
+//       [['flights.store'], ['Flight/StoreFlight']],
+//       [['flights.update'], ['Flight/UpdateFlight']]
+//     ])
+//   )
+// admin
+Route.get('api/admin/users', 'AdminController.index').middleware([
+  'auth',
+  'isAdmin'
+])
+Route.put('api/admin/users/:userId', 'AdminController.update').middleware([
+  'auth',
+  'isAdmin'
+])
