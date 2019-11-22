@@ -10,9 +10,9 @@ class AccessAdmin {
    * @param {Function} next
    */
   async handle ({ response, auth }, next) {
-    const { admin } = auth.user
+    const { rule } = auth.user
 
-    if (!admin) {
+    if (rule !== 'admin') {
       return response
         .status(403)
         .send({ unauthorized: { message: 'You dont have authorized!' } })

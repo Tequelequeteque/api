@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const crypto = require('crypto')
 
@@ -36,7 +36,7 @@ class UserController {
    */
   async store ({ request, response }) {
     const redirect = request.input('redirect')
-    const data = request.only(['name', 'email', 'password'])
+    const data = request.only(['name', 'email', 'password', 'cpf', 'phone'])
 
     data.token = crypto.randomBytes(10).toString('hex')
     data.token_created_at = new Date()
@@ -75,7 +75,14 @@ class UserController {
    */
   async update ({ request, response, auth }) {
     let user = auth.user
-    const { name, email, password, newPassword, redirect } = request.all()
+    const {
+      name,
+      email,
+      phone,
+      password,
+      newPassword,
+      redirect
+    } = request.all()
 
     const confirmedPassword = await Hash.verify(password, user.password)
     if (!confirmedPassword) {
@@ -93,6 +100,7 @@ class UserController {
 
     user.name = name || user.name
     user.email = email || user.email
+    user.phone = phone || user.phone
     user.password = newPassword || password
 
     if (email) {
@@ -105,7 +113,6 @@ class UserController {
     await user.save()
     user = user.toJSON()
 
-    delete user.password
     delete user.token
     delete user.token_created_at
 
