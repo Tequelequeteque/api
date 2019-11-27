@@ -1,10 +1,11 @@
-'use strict'
+'use strict';
 
-class UserUpdateUser {
+class UserUpdate {
   get rules () {
     return {
       email: 'email',
       name: 'string',
+      phone: 'string|min:12|max:15',
       password: 'required',
       newPassword: 'alphaNumeric|min:6',
       newPasswordConfirmation: 'requiredIf:newPassword|same:newPassword',
@@ -13,4 +14,4 @@ class UserUpdateUser {
   }
 }
 
-module.exports = UserUpdateUser
+module.exports = UserUpdate

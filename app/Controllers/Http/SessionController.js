@@ -1,9 +1,10 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/Params')} Params */
 
+const User = use('App/Models/User')
 /**
  * Resourceful controller for interacting with sessions
  */
@@ -31,6 +32,8 @@ class SessionController {
   async store ({ request, response, auth }) {
     const { email, password } = request.all()
     const token = await auth.attempt(email, password)
+    const user = await User.findBy('email', email)
+    token.rule = user.rule
     return response.status(201).send(token)
   }
 

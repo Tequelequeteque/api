@@ -50,7 +50,9 @@ class ExceptionHandler extends BaseExceptionHandler {
    * @return {void}
    */
   async report (error, { request }) {
-    Sentry.captureException(error)
+    if (error.status >= 500) {
+      Sentry.captureException(error)
+    }
   }
 }
 
