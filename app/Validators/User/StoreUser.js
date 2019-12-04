@@ -9,6 +9,9 @@ class UserStore {
       phone: 'required|string|min:12|max:15',
       password: 'required|alphaNumeric|min:6',
       passwordConfirmation: 'required|same:password',
+      medicine: 'string',
+      alergy: 'string',
+      restrictions: 'string',
       redirect: 'required|url'
     }
   }

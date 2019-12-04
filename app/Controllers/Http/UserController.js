@@ -36,7 +36,16 @@ class UserController {
    */
   async store ({ request, response }) {
     const redirect = request.input('redirect')
-    const data = request.only(['name', 'email', 'password', 'cpf', 'phone'])
+    const data = request.only([
+      'name',
+      'email',
+      'password',
+      'cpf',
+      'phone',
+      'medicine',
+      'alergy',
+      'restrictions'
+    ])
 
     data.token = crypto.randomBytes(10).toString('hex')
     data.token_created_at = new Date()
@@ -48,7 +57,6 @@ class UserController {
 
     delete user.token
     delete user.token_created_at
-    delete user.password
 
     return response.status(201).send(user)
   }
