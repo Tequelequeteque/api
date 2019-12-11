@@ -29,8 +29,8 @@ class UserStore {
   // qualquer duvida doc: https://adonisjs.com/docs/4.1/validator#_custom_error_messages
   get messages () {
     return {
-      'email.unique': 'This email is already registered.',
-      'cpf.unique': 'This cpf is already registered.'
+      'email.unique': 'E-mail já cadastrado.',
+      'cpf.unique': 'CPF já cadastrado.'
     }
   }
 }
