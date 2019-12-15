@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const Env = use('Env')
 
@@ -27,7 +27,7 @@ module.exports = {
     pool: true,
     port: Env.get('SMTP_PORT', 2525),
     host: Env.get('SMTP_HOST'),
-    secure: false,
+    secure: true,
     auth: {
       user: Env.get('MAIL_USERNAME'),
       pass: Env.get('MAIL_PASSWORD')

@@ -7,3 +7,4 @@ tmp
 # The development sqlite file
 database/*.sqlite
 .vscode
+.env
