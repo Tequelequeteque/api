@@ -9,6 +9,7 @@ Route.get('api', ok)
 
 // users
 Route.post('api/users', 'UserController.store').validator('User/StoreUser')
+Route.get('api/users/:userId', 'UserController.show').middleware(['auth'])
 Route.put('api/users', 'UserController.update')
   .middleware(['auth'])
   .validator('User/UpdateUser')

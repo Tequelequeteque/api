@@ -70,7 +70,9 @@ class UserController {
    * @param {Response} ctx.response
    */
   async show ({ params, request, response }) {
-    return response.status(501).send()
+    const { userId } = params
+    const user = await User.find(userId);
+    return response.status(200).send(user)
   }
 
   /**
