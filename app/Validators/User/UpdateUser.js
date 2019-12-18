@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 class UserUpdate {
   get rules () {

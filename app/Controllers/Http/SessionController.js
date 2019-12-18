@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -17,7 +17,7 @@ class SessionController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async index({ request, response }) {
+  async index ({ request, response }) {
     return response.status(501).send()
   }
 
@@ -29,11 +29,11 @@ class SessionController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store({ request, response, auth }) {
+  async store ({ request, response, auth }) {
     const { email, password } = request.all()
-    const token = await auth.attempt(email, password);
-    const user = await User.findBy('email', email);
-    const session = JSON.parse(JSON.stringify(token));
+    const token = await auth.attempt(email, password)
+    const user = await User.findBy('email', email)
+    const session = JSON.parse(JSON.stringify(token))
     session.user = {
       rule: user.rule,
       name: user.name,
@@ -41,7 +41,7 @@ class SessionController {
       id: user.id,
       email_confirmed: user.email_confirmed,
       payment: user.payment
-    };
+    }
     return response.status(201).send(session)
   }
 
@@ -53,7 +53,7 @@ class SessionController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async show({ params, request, response }) {
+  async show ({ params, request, response }) {
     return response.status(501).send()
   }
 
@@ -65,7 +65,7 @@ class SessionController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {
+  async update ({ params, request, response }) {
     return response.status(501).send()
   }
 
@@ -77,7 +77,7 @@ class SessionController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy({ params, request, response }) {
+  async destroy ({ params, request, response }) {
     return response.status(501).send()
   }
 }

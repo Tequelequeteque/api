@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 class UserStore {
   // essa função faz validar todos os campos, o default é false caso apague
