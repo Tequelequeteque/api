@@ -9,6 +9,7 @@ const crypto = require('crypto')
 const User = use('App/Models/User')
 const Mail = use('Mail')
 const Env = use('Env')
+const mailUsername = Env.get('MAIL_USERNAME')
 const appName = Env.get('APP_NAME')
 
 /**
@@ -102,7 +103,7 @@ class ConfirmedEmailController {
       message =>
         message
           .to(email)
-          .from(`noreply@${appName}.com`, `Equipe ${appName}`)
+          .from(mailUsername, `Equipe ${appName}`)
           .subject('Confirmação de email.')
     )
   }

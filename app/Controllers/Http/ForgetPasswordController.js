@@ -10,6 +10,7 @@ const User = use('App/Models/User')
 const Mail = use('Mail')
 const Env = use('Env')
 const appName = Env.get('APP_NAME')
+const mailUsername = Env.get('MAIL_USERNAME')
 
 class ForgetPasswordController {
   /**
@@ -100,7 +101,7 @@ class ForgetPasswordController {
       message =>
         message
           .to(email)
-          .from(`noreply@${appName}.com`, `Equipe ${appName}`)
+          .from(mailUsername, `Equipe ${appName}`)
           .subject('Recuperação de senha.')
     )
   }
