@@ -30,7 +30,9 @@ class UserStore {
   get messages () {
     return {
       'email.unique': 'E-mail já cadastrado.',
-      'cpf.unique': 'CPF já cadastrado.'
+      'email.email': 'E-mail inválido.',
+      'cpf.unique': 'CPF já cadastrado.',
+      'passwordConfirmation.same': 'Senha e confirmação de senha não conferem'
     }
   }
 }
