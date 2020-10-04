@@ -74,7 +74,8 @@ class ForgetPasswordController {
     user.token = null
     user.token_created_at = null
 
-    await user.save()
+    await user.save();
+    return response.status(200).send(user);
   }
 
   /**
