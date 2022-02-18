@@ -30,7 +30,7 @@
     "@sentry/node": "^5.10.2",
     "moment": "^2.24.0",
     "pg": "^7.14.0",
-    "url-parse": "^1.4.7"
+    "url-parse": "^1.5.6"
   },
   "devDependencies": {
     "eslint": "^6.5.1",
