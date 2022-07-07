@@ -28,7 +28,7 @@
     "@adonisjs/mail": "^3.0.10",
     "@adonisjs/validator": "^5.0.6",
     "@sentry/node": "^5.10.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "pg": "^7.14.0",
     "url-parse": "^1.4.7"
   },
